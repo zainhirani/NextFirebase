@@ -4,20 +4,22 @@ import {
   Box,
   Checkbox,
   FormControlLabel,
+  FormHelperText,
   Grid,
   Link,
   TextField,
 } from "@mui/material";
-import { signInWithEmailAndPassword } from "firebase/auth";
+// import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useFormik } from "formik";
-import { signIn, signOut, useSession } from "next-auth/react";
+// import { signIn, signOut, useSession } from "next-auth/react";
 import { useSnackbar } from "notistack";
 import * as Yup from "yup";
-import { useAuthContext } from "contexts/AuthContext";
 import { auth } from "platform/initFirebase";
 import FormattedMessage, { useFormattedMessage } from "theme/FormattedMessage";
 import messages from "./messages";
 import { ButtonWrapper } from "./Styled";
+import { useAuth } from "contexts/AuthContext";
+// import { useAuthContext } from "contexts/AuthContext";
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
   password: Yup.string().required().min(6).label("Password"),
@@ -28,21 +30,44 @@ const validationSchema = Yup.object().shape({
 
 const RegisterForm = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const { signIn } = useAuthContext();
   const router = useRouter();
+  const { signUp } = useAuth();
+  //   const { signUp } = useAuthContext();
 
   const onSubmit = useCallback(async (data: any) => {
-    signInWithEmailAndPassword(auth, data.email, data.password)
-      .then((userCredential) => {
+    //   alert("Done!");
+    // await createUserWithEmailAndPassword(auth, data.email, data.password)
+    //   .then((userCredential) => {
+    //     // Signed in
+    //     const user = userCredential.user;
+    //     router.push("/login");
+    //     console.log(user);
+    //     enqueueSnackbar(<FormattedMessage {...messages.successMessage} />, {
+    //       variant: "success",
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     const errorCode = error.code;
+    //     const errorMessage = error.message;
+    //     console.log(errorCode, errorMessage);
+    //     enqueueSnackbar(<FormattedMessage {...messages.errorMessage} />, {
+    //       variant: "warning",
+    //     });
+    //   });
+    // enqueueSnackbar(<FormattedMessage {...messages.successMessage} />, {
+    //   variant: "success",
+    // });
+    await signUp(data.email, data.password)
+      .then((userCredential: any) => {
         // Signed in
         const user = userCredential.user;
-        router.push("/");
+        router.push("/login");
         console.log(user);
         enqueueSnackbar(<FormattedMessage {...messages.successMessage} />, {
           variant: "success",
         });
       })
-      .catch((error) => {
+      .catch((error: any) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode, errorMessage);
@@ -50,15 +75,15 @@ const RegisterForm = () => {
           variant: "warning",
         });
       });
-    // enqueueSnackbar(<FormattedMessage {...messages.successMessage} />, {
-    //   variant: "success",
-    // });
   }, []);
+  //   const onSubmit = () => {
+  //     alert("Done!");
+  //   };
 
   // use formik
   const { handleChange, handleSubmit, handleBlur, errors, values, touched } =
     useFormik({
-      initialValues: { name: "", email: "", password: "", confirmpassword: "" },
+      initialValues: { name: "", email: "", password: "", confirmPassword: "" },
       validationSchema,
       onSubmit,
     });
@@ -121,16 +146,16 @@ const RegisterForm = () => {
         </Grid>
         <Grid item>
           <TextField
-            id="confirmpassword"
-            name="confirmpassword"
+            id="confirmPassword"
+            name="confirmPassword"
             label={<FormattedMessage {...messages.confirmpasswordLabel} />}
-            value={values.confirmpassword}
+            value={values.confirmPassword}
             onChange={handleChange}
             onBlur={handleBlur}
             type="password"
             placeholder={confirmpasswordPlaceholder}
-            error={touched.password && Boolean(errors.password)}
-            helperText={touched.password && errors.password}
+            error={touched.confirmPassword && Boolean(errors.confirmPassword)}
+            helperText={touched.confirmPassword && errors.confirmPassword}
             autoComplete="off"
           />
         </Grid>

@@ -1,106 +1,76 @@
-import { createContext, useCallback, useContext } from "react";
-import { useRouter } from "next/router";
-import { Box, CircularProgress } from "@mui/material";
-import { signOut as logout, signIn, useSession } from "next-auth/react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import {
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { auth } from "platform/initFirebase";
 import { AUTH_LOGIN_URL } from "configs";
-import { getAuthenticationToken, setAuthenticationHeader } from "services";
-// import { FLEET_MANAGEMENT } from "constants/routes";
-// import OverlayLoader from "theme/Loader/OverlayLoader";
+import { useRouter } from "next/router";
+import { getAuthenticationToken } from "services";
+import { useSession } from "next-auth/react";
 
-interface AuthContextType {
-  currentUser: any;
-  signOut: () => void;
-  signIn: (...args: any) => void;
+interface UserType {
+  email: string | null;
+  uid: string | null;
 }
 
-interface AuthContextProps {
-  children?: any;
-}
+const AuthContext = createContext({});
 
-const AuthContext = createContext({} as AuthContextType);
-
+export const useAuth = () => useContext<any>(AuthContext);
 const AUTHENTICATION_PATH = [AUTH_LOGIN_URL];
 
-const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
-  const { data: session, status } = useSession();
-  const loading = status === "loading";
+export const AuthContextProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [user, setUser] = useState<UserType>({ email: null, uid: null });
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const signOut = useCallback(async () => {
-    logout({ callbackUrl: "/" });
-    router.replace(AUTHENTICATION_PATH[0]!);
-  }, [router]);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user && router.pathname == "/login") {
+        setUser({
+          email: user.email,
+          uid: user.uid,
+        });
+        const params: { pathname: string; query?: { redirectTo: string } } = {
+          pathname:
+            // @ts-ignore
+            "/",
+        };
+        router.replace(params);
+      } else if (!user && router.pathname == "/") {
+        setUser({ email: null, uid: null });
+        router.replace(AUTHENTICATION_PATH[0]!);
+      }
+    });
+    setLoading(false);
 
-  const prevToken = getAuthenticationToken();
-  const currToken: any = session?.accessToken;
+    return () => unsubscribe();
+  }, []);
 
-  if (currToken && prevToken !== `Bearer ${currToken}`) {
-    setAuthenticationHeader(currToken);
-  }
+  const signUp = (email: string, password: string) => {
+    return createUserWithEmailAndPassword(auth, email, password);
+  };
 
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-  if (
-    !!process.browser &&
-    !(AUTHENTICATION_PATH || "").includes(window?.location?.pathname) &&
-    !session?.user &&
-    !loading
-  ) {
-    router.replace(AUTHENTICATION_PATH[0]!);
-    return null;
-  }
+  const signIn = (email: string, password: string) => {
+    console.log(email, "user......");
+    return signInWithEmailAndPassword(auth, email, password);
+    // return null;
+  };
 
-  if (
-    !!process.browser &&
-    (AUTHENTICATION_PATH || "").includes(window?.location?.pathname) &&
-    session &&
-    session.user &&
-    !loading
-  ) {
-    const params: { pathname: string; query?: { redirectTo: string } } = {
-      pathname:
-        // @ts-ignore
-        "/",
-    };
-    router.replace(params);
-    return null;
-  }
+  const logOut = async () => {
+    setUser({ email: null, uid: null });
+    await signOut(auth);
+  };
 
   return (
-    <AuthContext.Provider
-      value={{
-        signIn,
-        signOut,
-        currentUser: session?.user,
-      }}
-    >
-      {children}
+    <AuthContext.Provider value={{ user, signUp, signIn, logOut }}>
+      {loading ? null : children}
     </AuthContext.Provider>
   );
 };
-
-const AuthContextConsumer = AuthContext.Consumer;
-
-function useAuthContext(): AuthContextType {
-  return useContext(AuthContext);
-}
-
-export {
-  AuthContext,
-  AuthContextProvider,
-  AuthContextConsumer,
-  useAuthContext,
-};
-export default AuthContext;

@@ -1,20 +1,15 @@
-import FormattedMessage from "theme/FormattedMessage";
-import ThemeSwitcher from "components/ThemeSwitch";
-import Typography from "@mui/material/Typography";
-// import { signOut } from "firebase/auth";
+import { useAuth } from "contexts/AuthContext";
 import { auth } from "platform/initFirebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
-import { useAuth } from "contexts/AuthContext";
-
+import React, { useEffect } from "react";
+import ThemeSwitcher from "components/ThemeSwitch";
+import { BoxWrapper, ButtonWrapper } from "./Styled";
 import messages from "./messages";
-import { BoxWrapper } from "./Styled";
-import { ButtonWrapper } from "./Styled";
-import { useEffect } from "react";
-// import { useAuthContext } from "contexts/AuthContext";
+import FormattedMessage from "theme/FormattedMessage";
+import { Typography } from "@mui/material";
 
-const HomeScreen: React.FC = () => {
-  // const { signOut } = useAuthContext();
+const DashboardScreen = () => {
   const { user, logOut } = useAuth();
   const router = useRouter();
   useEffect(() => {
@@ -27,9 +22,9 @@ const HomeScreen: React.FC = () => {
       }
     });
   }, []);
+
   const handleLogout = () => {
     logOut()
-      // signOut();
       .then(() => {
         // Sign-out successful.
         router.push("/login");
@@ -65,4 +60,4 @@ const HomeScreen: React.FC = () => {
   );
 };
 
-export default HomeScreen;
+export default DashboardScreen;

@@ -8,16 +8,17 @@ import {
   Link,
   TextField,
 } from "@mui/material";
-import { signInWithEmailAndPassword } from "firebase/auth";
+// import { signInWithEmailAndPassword } from "firebase/auth";
 import { useFormik } from "formik";
-import { signIn, signOut, useSession } from "next-auth/react";
+// import { signIn, signOut, useSession } from "next-auth/react";
 import { useSnackbar } from "notistack";
 import * as Yup from "yup";
-import { useAuthContext } from "contexts/AuthContext";
-import { auth } from "platform/initFirebase";
+// import { useAuthContext } from "contexts/AuthContext";
+// import { auth } from "platform/initFirebase";
 import FormattedMessage, { useFormattedMessage } from "theme/FormattedMessage";
 import messages from "./messages";
 import { ButtonWrapper } from "./Styled";
+import { useAuth } from "contexts/AuthContext";
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
   password: Yup.string().required().min(6).label("Password"),
@@ -25,21 +26,26 @@ const validationSchema = Yup.object().shape({
 
 const LoginForm = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const { signIn } = useAuthContext();
+  // const { signIn } = useAuthContext();
+  const { signIn } = useAuth();
   const router = useRouter();
 
   const onSubmit = useCallback(async (data: any) => {
-    signInWithEmailAndPassword(auth, data.email, data.password)
-      .then((userCredential) => {
-        // Signed in
+    // await signIn("credentials", {
+    //   ...data,
+    //   redirect: false,
+    // });
+    await signIn(data.email, data.password)
+      .then((userCredential: any) => {
         const user = userCredential.user;
-        router.push("/");
-        console.log(user);
+        router.push("/app/dashboard");
+        // console.log(user);
         enqueueSnackbar(<FormattedMessage {...messages.successMessage} />, {
           variant: "success",
         });
+        sessionStorage.setItem("accessToken", user.accessToken);
       })
-      .catch((error) => {
+      .catch((error: { code: any; message: any }) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode, errorMessage);
@@ -47,9 +53,6 @@ const LoginForm = () => {
           variant: "warning",
         });
       });
-    // enqueueSnackbar(<FormattedMessage {...messages.successMessage} />, {
-    //   variant: "success",
-    // });
   }, []);
 
   // use formik
