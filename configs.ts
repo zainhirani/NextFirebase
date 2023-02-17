@@ -9,12 +9,9 @@ export const NEXT_PUBLIC_FIREBASE_MESSAGING_ID =
   process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_ID;
 export const NEXT_PUBLIC_FIREBASE_APP_ID =
   process.env.NEXT_PUBLIC_FIREBASE_APP_ID;
-export const NEXT_PUBLIC_FIREBASE_DATABASE_URL =
-  process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL;
-export const NEXT_PUBLIC_MODE_ENV =
+  export const NEXT_PUBLIC_MODE_ENV =
   process.env.NEXT_PUBLIC_MODE_ENV === "development";
 
-export const AUTH_LOGIN_URL = process.env.NEXT_PUBLIC_AUTH_LOGIN_URL;
+  export const AUTH_LOGIN_URL = process.env.NEXT_PUBLIC_AUTH_LOGIN_URL;
 
 export const PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
-export const LOGINCOVER = "/logincover.png";
