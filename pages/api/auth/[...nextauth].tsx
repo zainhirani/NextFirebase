@@ -21,9 +21,10 @@ export default NextAuth({
             email: credentials.email,
             password: credentials.password,
           });
-          return Promise.resolve(
-            resp?.data?.idToken ? { jwtToken: resp.data.idToken } : {},
-          ) as any;
+          // return Promise.resolve(
+          //   resp?.data?.idToken ? { jwtToken: resp.data.idToken } : {},
+          // ) as any;
+          return null;
         } catch (e: any) {
           return Promise.reject(new Error(e?.msg || "Something Wrong"));
         }

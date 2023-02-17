@@ -10,12 +10,12 @@ import { QueryCache, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Hydrate } from "react-query/hydration";
 
+import { AuthContextProvider } from "contexts/AuthContext";
 import ThemeContextProvider from "contexts/ThemeContext";
 import { getLocale, getMessages } from "i18n";
 import { initFirebase } from "platform/initFirebase";
 import ThemeProvider from "theme/Provider";
 import { initAnalytics } from "../platform/analytics";
-import { AuthContextProvider } from "contexts/AuthContext";
 
 const loadSideEffects = () => {
   // firebase initialization
