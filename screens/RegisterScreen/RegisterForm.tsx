@@ -21,6 +21,7 @@ import { ButtonWrapper } from "./Styled";
 import { useAuth } from "contexts/AuthContext";
 // import { useAuthContext } from "contexts/AuthContext";
 const validationSchema = Yup.object().shape({
+  name: Yup.string().required().label("Name"),
   email: Yup.string().required().email().label("Email"),
   password: Yup.string().required().min(6).label("Password"),
   confirmPassword: Yup.string()

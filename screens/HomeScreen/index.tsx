@@ -43,21 +43,7 @@ const HomeScreen: React.FC = () => {
   };
   return (
     <>
-      <BoxWrapper>
-        <Typography>
-          <FormattedMessage {...messages.title} />
-        </Typography>
-        <BoxWrapper
-          sx={{
-            boxShadow: "none",
-            margin: 0,
-            padding: 0,
-          }}
-        >
-          <ThemeSwitcher />
-          <ButtonWrapper onClick={handleLogout}>Logout</ButtonWrapper>
-        </BoxWrapper>
-      </BoxWrapper>
+      <ButtonWrapper onClick={handleLogout}>Logout</ButtonWrapper>
       <Typography sx={{ ml: 4 }}>
         <FormattedMessage {...messages.description} />
       </Typography>
