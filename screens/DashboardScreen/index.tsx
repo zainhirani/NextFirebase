@@ -10,29 +10,16 @@ import FormattedMessage from "theme/FormattedMessage";
 import { Typography } from "@mui/material";
 
 const DashboardScreen = () => {
-  const { user, logOut } = useAuth();
+  const { logOut, user } = useAuth();
   const router = useRouter();
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const uid = user.uid;
-        console.log("uid", uid);
-      } else {
-        console.log("user is logged out");
-      }
-    });
-  }, []);
-
+  console.log(user, "user....");
   const handleLogout = () => {
     logOut()
       .then(() => {
-        // Sign-out successful.
         router.push("/login");
-        console.log("Signed out successfully");
         sessionStorage.clear();
       })
       .catch((error: any) => {
-        // An error happened.
         console.log(error.message);
       });
   };
@@ -53,9 +40,34 @@ const DashboardScreen = () => {
           <ButtonWrapper onClick={handleLogout}>Logout</ButtonWrapper>
         </BoxWrapper>
       </BoxWrapper>
-      <Typography sx={{ ml: 4 }}>
-        <FormattedMessage {...messages.description} />
-      </Typography>
+      <BoxWrapper
+        sx={{
+          ml: 4,
+          boxShadow: "none",
+          padding: 0,
+          background: "none",
+          flexDirection: "column",
+          alignItems: "start",
+        }}
+      >
+        <Typography>
+          <FormattedMessage {...messages.description} />
+        </Typography>
+        <Typography>
+          <FormattedMessage {...messages.profileTitle} />
+        </Typography>
+        <Typography>
+          <FormattedMessage {...messages.profileDescription} />
+        </Typography>
+        <Typography>
+          <FormattedMessage {...messages.userId} />
+          {user.uid}
+        </Typography>
+        <Typography>
+          <FormattedMessage {...messages.emailID} />
+          {user.email}
+        </Typography>
+      </BoxWrapper>
     </>
   );
 };
