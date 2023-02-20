@@ -8,13 +8,9 @@ import {
   Link,
   TextField,
 } from "@mui/material";
-// import { signInWithEmailAndPassword } from "firebase/auth";
 import { useFormik } from "formik";
-// import { signIn, signOut, useSession } from "next-auth/react";
 import { useSnackbar } from "notistack";
 import * as Yup from "yup";
-// import { useAuthContext } from "contexts/AuthContext";
-// import { auth } from "platform/initFirebase";
 import FormattedMessage, { useFormattedMessage } from "theme/FormattedMessage";
 import messages from "./messages";
 import { ButtonWrapper } from "./Styled";
@@ -26,31 +22,25 @@ const validationSchema = Yup.object().shape({
 
 const LoginForm = () => {
   const { enqueueSnackbar } = useSnackbar();
-  // const { signIn } = useAuthContext();
   const { signIn } = useAuth();
   const router = useRouter();
 
   const onSubmit = useCallback(async (data: any) => {
-    // await signIn("credentials", {
-    //   ...data,
-    //   redirect: false,
-    // });
     await signIn(data.email, data.password)
       .then((userCredential: any) => {
         const user = userCredential.user;
         router.push("/app/dashboard");
-        // console.log(user);
         enqueueSnackbar(<FormattedMessage {...messages.successMessage} />, {
           variant: "success",
         });
         sessionStorage.setItem("accessToken", user.accessToken);
       })
-      .catch((error: { code: any; message: any }) => {
+      .catch((error: any) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        enqueueSnackbar(<FormattedMessage {...messages.errorMessage} />, {
-          variant: "warning",
+        console.log(errorCode,errorMessage);
+        enqueueSnackbar(errorMessage, {
+          variant: "error",
         });
       });
   }, []);

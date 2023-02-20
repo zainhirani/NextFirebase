@@ -17,4 +17,20 @@ export default defineMessages({
     id: `${scope}.description`,
     defaultMessage: "Welcome to Dashboard",
   },
+  profileTitle: {
+    id: `${scope}.profileTitle`,
+    defaultMessage: "Profile",
+  },
+  profileDescription: {
+    id: `${scope}.profileDescription`,
+    defaultMessage: "Your Profile Information:",
+  },
+  userId: {
+    id: `${scope}.userId`,
+    defaultMessage: "Your ID: ",
+  },
+  emailID: {
+    id: `${scope}.emailID`,
+    defaultMessage: "Your Email: ",
+  },
 });

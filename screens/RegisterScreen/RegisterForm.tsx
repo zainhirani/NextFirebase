@@ -3,15 +3,14 @@ import { useRouter } from "next/router";
 import {
   Box,
   Checkbox,
+  CircularProgress,
   FormControlLabel,
   FormHelperText,
   Grid,
   Link,
   TextField,
 } from "@mui/material";
-// import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useFormik } from "formik";
-// import { signIn, signOut, useSession } from "next-auth/react";
 import { useSnackbar } from "notistack";
 import * as Yup from "yup";
 import { auth } from "platform/initFirebase";
@@ -19,7 +18,7 @@ import FormattedMessage, { useFormattedMessage } from "theme/FormattedMessage";
 import messages from "./messages";
 import { ButtonWrapper } from "./Styled";
 import { useAuth } from "contexts/AuthContext";
-// import { useAuthContext } from "contexts/AuthContext";
+import { useQuery } from "react-query";
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
   email: Yup.string().required().email().label("Email"),
@@ -33,31 +32,9 @@ const RegisterForm = () => {
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   const { signUp } = useAuth();
-  //   const { signUp } = useAuthContext();
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = useCallback(async (data: any) => {
-    //   alert("Done!");
-    // await createUserWithEmailAndPassword(auth, data.email, data.password)
-    //   .then((userCredential) => {
-    //     // Signed in
-    //     const user = userCredential.user;
-    //     router.push("/login");
-    //     console.log(user);
-    //     enqueueSnackbar(<FormattedMessage {...messages.successMessage} />, {
-    //       variant: "success",
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //     console.log(errorCode, errorMessage);
-    //     enqueueSnackbar(<FormattedMessage {...messages.errorMessage} />, {
-    //       variant: "warning",
-    //     });
-    //   });
-    // enqueueSnackbar(<FormattedMessage {...messages.successMessage} />, {
-    //   variant: "success",
-    // });
     await signUp(data.email, data.password)
       .then((userCredential: any) => {
         // Signed in
@@ -72,14 +49,11 @@ const RegisterForm = () => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode, errorMessage);
-        enqueueSnackbar(<FormattedMessage {...messages.errorMessage} />, {
-          variant: "warning",
+        enqueueSnackbar(errorMessage, {
+          variant: "error",
         });
       });
   }, []);
-  //   const onSubmit = () => {
-  //     alert("Done!");
-  //   };
 
   // use formik
   const { handleChange, handleSubmit, handleBlur, errors, values, touched } =
@@ -183,7 +157,10 @@ const RegisterForm = () => {
       </Box>
 
       <Box>
-        <ButtonWrapper type="submit" variant="contained">
+        <ButtonWrapper
+          type="submit"
+          variant="contained"
+        >
           <FormattedMessage {...messages.signUp} />
         </ButtonWrapper>
       </Box>
