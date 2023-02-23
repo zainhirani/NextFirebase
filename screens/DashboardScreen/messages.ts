@@ -33,4 +33,8 @@ export default defineMessages({
     id: `${scope}.emailID`,
     defaultMessage: "Your Email: ",
   },
+  todoPage: {
+    id: `${scope}.todoPage`,
+    defaultMessage: "Todo List",
+  },
 });
