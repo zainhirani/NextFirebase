@@ -11,6 +11,26 @@ export const scope = "app.screens.TodoListScreen";
 export default defineMessages({
   addTodo: {
     id: `${scope}.addTodo`,
-    defaultMessage: "Add Todo",
+    defaultMessage: "Add Task",
+  },
+  title: {
+    id: `${scope}.title`,
+    defaultMessage: "Task Title",
+  },
+  action: {
+    id: `${scope}.action`,
+    defaultMessage: "Action",
+  },
+  description: {
+    id: `${scope}.description`,
+    defaultMessage: "Task Description",
+  },
+  editBtn: {
+    id: `${scope}.editBtn`,
+    defaultMessage: "Edit",
+  },
+  deleteBtn: {
+    id: `${scope}.deleteBtn`,
+    defaultMessage: "Delete",
   },
 });

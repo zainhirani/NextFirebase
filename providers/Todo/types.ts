@@ -33,4 +33,14 @@ export namespace Todo {
   export interface CreateAPIPayload extends CreateProps {
     data: CreateMutationPayload;
   }
+
+  //Remove
+  export type RemoveProps = {};
+  export type RemoveResponse = {
+    data: Items;
+  };
+  export type RemoveMutationPayload = {
+    id: string | undefined;
+  };
+  export interface RemoveAPIPayload extends RemoveMutationPayload {}
 }

@@ -66,6 +66,7 @@ const AddTodo = () => {
       });
     }
   }, [addTodo.isSuccess, addTodo.isError, addTodo.isLoading, router]);
+  console.log(addTodo, "...id");
   return (
     <Box
       component="main"
