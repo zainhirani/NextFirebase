@@ -69,7 +69,7 @@ export let getDesignTokens = (mode: PaletteMode) => {
             lightGrey: "#9EC6D8",
             primaryTranslucent: "#0093e766",
             primaryBlack: "rgba(255, 255, 255, 1)",
-            secondryBlack: "rgba(0, 0, 0, 0.12)",
+            secondryBlack: "rgba(0, 0, 0, 0.5)",
           }
         : {
             lightGrey: "#9EC6D8",
@@ -93,7 +93,6 @@ export let getDesignTokens = (mode: PaletteMode) => {
     shadow: {
       boxShadow: "0px 4px 48px rgba(0, 0, 0, 0.2)",
     },
-    
   });
 
   theme = createTheme(theme, {
@@ -195,7 +194,6 @@ export let getDesignTokens = (mode: PaletteMode) => {
           },
         },
       },
-
     },
     typography: {
       h1: {

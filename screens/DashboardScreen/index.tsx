@@ -38,6 +38,13 @@ const DashboardScreen = () => {
         >
           <ThemeSwitcher />
           <ButtonWrapper onClick={handleLogout}>Logout</ButtonWrapper>
+          <ButtonWrapper
+            onClick={() => {
+              router.replace("/app/todo");
+            }}
+          >
+            <FormattedMessage {...messages.todoPage} />
+          </ButtonWrapper>
         </BoxWrapper>
       </BoxWrapper>
       <BoxWrapper
