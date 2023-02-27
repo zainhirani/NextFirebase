@@ -27,3 +27,11 @@ export async function create(props: Todo.CreateAPIPayload): Promise<any> {
   });
   return id;
 }
+
+//Remove
+export async function remove(props: Todo.RemoveAPIPayload): Promise<any> {
+  const TodoDelete = await dbInstance.doc(`${props.id}`).delete();
+  console.log(TodoDelete, "..........delete");
+
+  return TodoDelete;
+}
