@@ -78,3 +78,21 @@ export function useRemoveTodo(props: Todo.RemoveProps = {}): UseMutationResult<
     retry: 0,
   });
 }
+
+//Update
+export function useUpdateTodo(props: Todo.UpdateProps = {}): UseMutationResult<
+  Todo.UpdateResponse,
+  {
+    message?: string;
+  },
+  Todo.UpdateMutationPayload
+> {
+  const queryClient = useQueryClient();
+  return useMutation((payload) => api.update(payload), {
+    mutationKey: `${KEY}|Update`,
+    onSuccess: () => {
+      queryClient.invalidateQueries(getKeyFromProps(props, "DETAIL"));
+    },
+    retry: 0,
+  });
+}
