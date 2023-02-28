@@ -11,16 +11,40 @@ import { TableButtonWrapper } from "theme/Buttons";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import { key } from "localforage";
 
 const TodoListScreen = () => {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-  const getTodo = useFetchTodo();
+  const getTodo: any = useFetchTodo();
   const deleteTodo = useRemoveTodo();
   console.log(deleteTodo, "delete.....");
-  console.log(getTodo, "datatatatatat");
+  console.log(getTodo.data, "getTodo.data.....");
 
+  const transformData = getTodo.data?.map((item: any) => {
+    return {
+      id: item?.[0],
+      data: item?.[1]?.data,
+      title: item?.[1]?.data.title,
+      description: item?.[1]?.data.description,
+      created: item?.[1]?.created,
+    };
+  });
+  useEffect(() => {
+    if (deleteTodo.isSuccess) {
+      enqueueSnackbar(<FormattedMessage {...messages.deleteSuccess} />, {
+        variant: "success",
+      });
+      router.reload();
+    }
+  }, [deleteTodo.isSuccess]);
   const columns: GridColDef[] = [
+    {
+      field: "id",
+      headerName: "ID",
+      width: 150,
+      hide: true,
+    },
     {
       field: "title",
       headerName: "Title",
@@ -48,7 +72,7 @@ const TodoListScreen = () => {
               variant="contained"
               // href="#outlined-buttons"
               onClick={() => {
-                router.push(`products/${params.row.slug}`);
+                router.replace(`todo/${params.row.id}`);
               }}
             >
               <FormattedMessage {...messages.editBtn} />
@@ -59,7 +83,7 @@ const TodoListScreen = () => {
               variant="outlined"
               // href="#outlined-buttons"
               onClick={() => {
-                deleteTodo.mutate({ id: "7AoRpEUDKxBhvvJiBj2u" });
+                deleteTodo.mutate({ id: params.row.id });
               }}
             >
               <FormattedMessage {...messages.deleteBtn} />
@@ -82,10 +106,9 @@ const TodoListScreen = () => {
         <DataGrid
           sx={{ margin: "40px" }}
           autoHeight
-          // getRowId={(row) => row.created}
-          getRowId={(row) => row?.title + row?.description}
+          getRowId={(row) => row?.id}
           rowHeight={75}
-          rows={getTodo?.data?.map((item: any) => item?.data) || []}
+          rows={transformData || []}
           columns={columns}
           pageSize={10}
           rowsPerPageOptions={[10]}

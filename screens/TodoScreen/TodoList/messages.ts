@@ -33,4 +33,8 @@ export default defineMessages({
     id: `${scope}.deleteBtn`,
     defaultMessage: "Delete",
   },
+  deleteSuccess: {
+    id: `${scope}.deleteSuccess`,
+    defaultMessage: "Task Deleted Successfully!",
+  },
 });

@@ -1,3 +1,4 @@
+import firebase from "firebase/compat";
 import { database } from "platform/initFirebase";
 import { Todo } from "./types";
 
@@ -7,8 +8,11 @@ console.log(dbInstance.get(), "....db");
 // Fetch
 export async function fetch(props: Todo.FetchAPIPayload): Promise<any> {
   const { docs } = await dbInstance.get();
-  const data = docs.map((item: any) => item.data());
+  const data = docs.map((doc) => {
+    return [doc.id, doc.data()];
+  });
 
+  console.log(data, "....dataId");
   return data;
 }
 
@@ -31,6 +35,14 @@ export async function create(props: Todo.CreateAPIPayload): Promise<any> {
 //Remove
 export async function remove(props: Todo.RemoveAPIPayload): Promise<any> {
   const TodoDelete = await dbInstance.doc(`${props.id}`).delete();
+  console.log(TodoDelete, "..........delete");
+
+  return TodoDelete;
+}
+
+//Update
+export async function update(props: Todo.UpdateAPIPayload): Promise<any> {
+  const TodoDelete = await dbInstance.doc(`${props.id}`).update(props);
   console.log(TodoDelete, "..........delete");
 
   return TodoDelete;

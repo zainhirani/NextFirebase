@@ -8,7 +8,9 @@ export namespace Todo {
   // Fetch
   export type FetchProps = {};
   export type FetchResponse = {
-    data: Items[];
+    _id: string;
+    title: string;
+    description: string;
   };
   export interface FetchAPIPayload extends FetchProps {}
 
@@ -43,4 +45,14 @@ export namespace Todo {
     id: string | undefined;
   };
   export interface RemoveAPIPayload extends RemoveMutationPayload {}
+
+  //Update
+  export type UpdateProps = {};
+  export type UpdateResponse = {
+    data: Items;
+  };
+  export type UpdateMutationPayload = {
+    id: string | undefined;
+  };
+  export interface UpdateAPIPayload extends UpdateMutationPayload {}
 }
