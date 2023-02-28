@@ -15,7 +15,7 @@ import { useFormik } from "formik";
 import { InputLabelWrapper } from "../Styled";
 import { ButtonWrapper } from "theme/Buttons";
 import { useFormattedMessage } from "theme/FormattedMessage";
-import { useCreateTodo } from "providers/Todo";
+import { useUpdateTodo } from "providers/Todo";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 
@@ -23,8 +23,9 @@ const validationSchema = Yup.object().shape({
   title: Yup.string().required().label("Title"),
   description: Yup.string().required().label("Description"),
 });
-const AddTodo = () => {
-  const addTodo = useCreateTodo();
+
+const TodoEdit = () => {
+  const editTodo = useUpdateTodo();
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const textPlaceholder = useFormattedMessage(messages.textPlaceholder);
@@ -43,30 +44,30 @@ const AddTodo = () => {
     },
     validationSchema,
     onSubmit: (values, { resetForm }) => {
-      addTodo.mutate({
-        title: values.title,
-        description: values.title,
-      });
+      //   editTodo.mutate({
+      //     // title: values.title,
+      //     // description: values.title,
+      //   });
       resetForm();
     },
   });
   useEffect(() => {
-    if (addTodo.isSuccess) {
+    if (editTodo.isSuccess) {
       enqueueSnackbar(<FormattedMessage {...messages.successMessage} />, {
         variant: "success",
       });
       router.replace(`/app/todo`);
     }
-    if (addTodo.isLoading) {
+    if (editTodo.isLoading) {
       <CircularProgress />;
     }
-    if (addTodo.isError) {
+    if (editTodo.isError) {
       enqueueSnackbar(<FormattedMessage {...messages.errorMessage} />, {
         variant: "error",
       });
     }
-  }, [addTodo.isSuccess, addTodo.isError, addTodo.isLoading, router]);
-  console.log(addTodo, "...id");
+  }, [editTodo.isSuccess, editTodo.isError, editTodo.isLoading, router]);
+  console.log(editTodo, "...id");
   return (
     <Box
       component="main"
@@ -87,7 +88,7 @@ const AddTodo = () => {
             mb={2}
           >
             <Typography sx={{ m: 1 }} variant="h4">
-              <FormattedMessage {...messages.addTitle} />
+              <FormattedMessage {...messages.editTitle} />
             </Typography>
             <Box sx={{ m: 1 }}>
               <ButtonWrapper type="submit" color="primary" variant="contained">
@@ -149,4 +150,4 @@ const AddTodo = () => {
   );
 };
 
-export default AddTodo;
+export default TodoEdit;
