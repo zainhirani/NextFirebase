@@ -35,7 +35,6 @@ const TodoListScreen = () => {
       enqueueSnackbar(<FormattedMessage {...messages.deleteSuccess} />, {
         variant: "success",
       });
-      router.reload();
     }
   }, [deleteTodo.isSuccess]);
   const columns: GridColDef[] = [

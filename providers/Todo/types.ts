@@ -47,12 +47,17 @@ export namespace Todo {
   export interface RemoveAPIPayload extends RemoveMutationPayload {}
 
   //Update
-  export type UpdateProps = {};
+  export type UpdateProps = {
+    id: string | undefined;
+  };
   export type UpdateResponse = {
     data: Items;
   };
   export type UpdateMutationPayload = {
-    id: string | undefined;
+    title: string;
+    description: string;
   };
-  export interface UpdateAPIPayload extends UpdateMutationPayload {}
+  export interface UpdateAPIPayload extends UpdateProps {
+    data: UpdateMutationPayload;
+  }
 }

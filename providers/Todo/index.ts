@@ -1,3 +1,4 @@
+import { id } from "date-fns/locale";
 import {
   UseMutationResult,
   UseQueryResult,
@@ -10,7 +11,10 @@ import { Todo } from "./types";
 
 const KEY = "TODO";
 
-export function getKeyFromProps(props: any, type: "TODO" | "DETAIL"): string[] {
+export function getKeyFromProps(
+  props: any,
+  type: "LISTING" | "DETAIL",
+): string[] {
   const key = [KEY, type];
   key.push(props);
   return key;
@@ -34,7 +38,9 @@ export function getFormProviderKey(
 export function useFetchTodo(
   props: Todo.FetchProps = {},
 ): UseQueryResult<Todo.FetchResponse> {
-  return useQuery(getKeyFromProps(props, "TODO"), () => api.fetch(props), {});
+  return useQuery(getKeyFromProps(props, "LISTING"), () => api.fetch(props), {
+    retry: 5,
+  });
 }
 // Detail
 export function useTodoDetail(
@@ -55,7 +61,7 @@ export function useCreateTodo(props: Todo.CreateProps = {}): UseMutationResult<
   return useMutation((payload) => api.create({ ...props, data: payload }), {
     mutationKey: `${KEY}|Create`,
     onSuccess: () => {
-      queryClient.invalidateQueries(getKeyFromProps(props, "TODO"));
+      queryClient.invalidateQueries({ queryKey: [KEY] });
     },
     retry: 0,
   });
@@ -73,14 +79,14 @@ export function useRemoveTodo(props: Todo.RemoveProps = {}): UseMutationResult<
   return useMutation((payload) => api.remove(payload), {
     mutationKey: `${KEY}|Remove`,
     onSuccess: () => {
-      queryClient.invalidateQueries(getKeyFromProps(props, "DETAIL"));
+      queryClient.invalidateQueries({ queryKey: [KEY] });
     },
     retry: 0,
   });
 }
 
 //Update
-export function useUpdateTodo(props: Todo.UpdateProps = {}): UseMutationResult<
+export function useUpdateTodo(props: Todo.UpdateProps): UseMutationResult<
   Todo.UpdateResponse,
   {
     message?: string;
@@ -88,10 +94,10 @@ export function useUpdateTodo(props: Todo.UpdateProps = {}): UseMutationResult<
   Todo.UpdateMutationPayload
 > {
   const queryClient = useQueryClient();
-  return useMutation((payload) => api.update(payload), {
+  return useMutation((payload) => api.update({ ...props, data: payload }), {
     mutationKey: `${KEY}|Update`,
     onSuccess: () => {
-      queryClient.invalidateQueries(getKeyFromProps(props, "DETAIL"));
+      queryClient.invalidateQueries({ queryKey: [KEY] });
     },
     retry: 0,
   });
