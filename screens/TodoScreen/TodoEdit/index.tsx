@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Container,
@@ -15,9 +15,10 @@ import { useFormik } from "formik";
 import { InputLabelWrapper } from "../Styled";
 import { ButtonWrapper } from "theme/Buttons";
 import { useFormattedMessage } from "theme/FormattedMessage";
-import { useUpdateTodo } from "providers/Todo";
+import { useTodoDetail, useUpdateTodo } from "providers/Todo";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
+import { LoadingButton } from "@mui/lab";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().label("Title"),
@@ -25,8 +26,20 @@ const validationSchema = Yup.object().shape({
 });
 
 const TodoEdit = () => {
-  const editTodo = useUpdateTodo();
+  const [disableField, setDisableField] = useState(true);
   const router = useRouter();
+  const getSingleTodo = useTodoDetail({
+    id: router?.query?.id?.toString(),
+  });
+  console.log(getSingleTodo.data?.data, "........single");
+
+  const editTodo = useUpdateTodo({
+    id: router?.query?.id?.toString(),
+  });
+  const handleEnable = (e: any) => {
+    e.preventDefault();
+    setDisableField(false);
+  };
   const { enqueueSnackbar } = useSnackbar();
   const textPlaceholder = useFormattedMessage(messages.textPlaceholder);
   const {
@@ -39,14 +52,15 @@ const TodoEdit = () => {
     touched,
   } = useFormik({
     initialValues: {
-      title: "",
-      description: "",
+      title: getSingleTodo.data?.data.title || "",
+      description: getSingleTodo.data?.data.description || "",
     },
     validationSchema,
+    enableReinitialize: true,
     onSubmit: (values, { resetForm }) => {
       editTodo.mutate({
-        title: values.title,
-        description: values.title,
+        title: values.title || "",
+        description: values.title || "",
       });
       resetForm();
     },
@@ -88,12 +102,39 @@ const TodoEdit = () => {
             mb={2}
           >
             <Typography sx={{ m: 1 }} variant="h4">
-              <FormattedMessage {...messages.editTitle} />
+              {disableField ? (
+                <FormattedMessage {...messages.taskTitle} />
+              ) : (
+                <FormattedMessage {...messages.editTitle} />
+              )}
             </Typography>
             <Box sx={{ m: 1 }}>
-              <ButtonWrapper type="submit" color="primary" variant="contained">
-                <FormattedMessage {...messages.publishButton} />
-              </ButtonWrapper>
+              {disableField ? (
+                <ButtonWrapper
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  onClick={handleEnable}
+                >
+                  <FormattedMessage {...messages.editButton} />
+                </ButtonWrapper>
+              ) : (
+                <>
+                  <LoadingButton
+                    type="submit"
+                    color="primary"
+                    variant="contained"
+                    loading={editTodo.isLoading}
+                    sx={{
+                      padding: "8px",
+                      borderRadius: "7px",
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    <FormattedMessage {...messages.updateButton} />
+                  </LoadingButton>
+                </>
+              )}
             </Box>
           </Box>
 
@@ -112,6 +153,7 @@ const TodoEdit = () => {
                   onBlur={handleBlur}
                   onChange={handleChange}
                   error={Boolean(touched.title && errors.title)}
+                  disabled={disableField}
                 />
                 {touched.title && errors.title && (
                   <FormHelperText error id="standard-weight-helper-text-title">
@@ -132,6 +174,7 @@ const TodoEdit = () => {
                   onBlur={handleBlur}
                   onChange={handleChange}
                   error={Boolean(touched.description && errors.description)}
+                  disabled={disableField}
                 />
                 {touched.description && errors.description && (
                   <FormHelperText

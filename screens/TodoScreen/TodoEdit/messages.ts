@@ -14,9 +14,17 @@ export default defineMessages({
     id: `${scope}.editTitle`,
     defaultMessage: "Edit Task",
   },
-  publishButton: {
-    id: `${scope}.publishButton`,
-    defaultMessage: "Publish",
+  taskTitle: {
+    id: `${scope}.taskTitle`,
+    defaultMessage: "Task Detail",
+  },
+  editButton: {
+    id: `${scope}.editButton`,
+    defaultMessage: "Edit Task",
+  },
+  updateButton: {
+    id: `${scope}.updateButton`,
+    defaultMessage: "Update",
   },
 
   // Input Fields
@@ -37,7 +45,7 @@ export default defineMessages({
   // Success Message
   successMessage: {
     id: `${scope}.successMessage`,
-    defaultMessage: "Task Added Successfully",
+    defaultMessage: "Task Updated Successfully",
   },
   // Error Message
   errorMessage: {
