@@ -12,7 +12,6 @@ import { Typography } from "@mui/material";
 const DashboardScreen = () => {
   const { logOut, user } = useAuth();
   const router = useRouter();
-  console.log(user, "user....");
   const handleLogout = () => {
     logOut()
       .then(() => {

@@ -41,7 +41,6 @@ export const AuthContextProvider = ({
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       const curr = auth.currentUser;
-      console.log(curr, "effecy userr");
       if (user) {
         setUser({
           email: user.email,
@@ -76,7 +75,6 @@ export const AuthContextProvider = ({
     await signOut(auth);
   };
 
-  console.log(user, "userrrrr");
   return (
     <AuthContext.Provider value={{ user, signUp, signIn, logOut }}>
       {loading ? null : children}

@@ -21,9 +21,6 @@ const HomeScreen: React.FC = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
-        console.log("uid", uid);
-      } else {
-        console.log("user is logged out");
       }
     });
   }, []);
@@ -31,13 +28,10 @@ const HomeScreen: React.FC = () => {
     logOut()
       // signOut();
       .then(() => {
-        // Sign-out successful.
         router.push("/login");
-        console.log("Signed out successfully");
         sessionStorage.clear();
       })
       .catch((error: any) => {
-        // An error happened.
         console.log(error.message);
       });
   };

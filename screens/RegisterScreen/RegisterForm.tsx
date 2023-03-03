@@ -40,7 +40,6 @@ const RegisterForm = () => {
         // Signed in
         const user = userCredential.user;
         router.push("/login");
-        console.log(user);
         enqueueSnackbar(<FormattedMessage {...messages.successMessage} />, {
           variant: "success",
         });
@@ -157,10 +156,7 @@ const RegisterForm = () => {
       </Box>
 
       <Box>
-        <ButtonWrapper
-          type="submit"
-          variant="contained"
-        >
+        <ButtonWrapper type="submit" variant="contained">
           <FormattedMessage {...messages.signUp} />
         </ButtonWrapper>
       </Box>

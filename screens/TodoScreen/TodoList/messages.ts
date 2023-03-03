@@ -37,4 +37,8 @@ export default defineMessages({
     id: `${scope}.deleteSuccess`,
     defaultMessage: "Task Deleted Successfully!",
   },
+  errorMessage: {
+    id: `${scope}.errorMessage`,
+    defaultMessage: "Task Deleted Successfully!",
+  },
 });
