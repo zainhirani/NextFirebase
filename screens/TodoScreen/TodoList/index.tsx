@@ -18,25 +18,30 @@ const TodoListScreen = () => {
   const { enqueueSnackbar } = useSnackbar();
   const getTodo: any = useFetchTodo();
   const deleteTodo = useRemoveTodo();
-  console.log(deleteTodo, "delete.....");
-  console.log(getTodo.data, "getTodo.data.....");
 
   const transformData = getTodo.data?.map((item: any) => {
     return {
       id: item?.[0],
+      uid: item?.[1]?.uid,
       data: item?.[1]?.data,
       title: item?.[1]?.data.title,
       description: item?.[1]?.data.description,
       created: item?.[1]?.created,
     };
   });
+
   useEffect(() => {
     if (deleteTodo.isSuccess) {
       enqueueSnackbar(<FormattedMessage {...messages.deleteSuccess} />, {
         variant: "success",
       });
     }
-  }, [deleteTodo.isSuccess]);
+    if (deleteTodo.isError) {
+      enqueueSnackbar(<FormattedMessage {...messages.errorMessage} />, {
+        variant: "error",
+      });
+    }
+  }, [deleteTodo.isSuccess, deleteTodo.isError]);
   const columns: GridColDef[] = [
     {
       field: "id",

@@ -31,7 +31,6 @@ const TodoEdit = () => {
   const getSingleTodo = useTodoDetail({
     id: router?.query?.id?.toString(),
   });
-  console.log(getSingleTodo.data?.data, "........single");
 
   const editTodo = useUpdateTodo({
     id: router?.query?.id?.toString(),
@@ -81,7 +80,6 @@ const TodoEdit = () => {
       });
     }
   }, [editTodo.isSuccess, editTodo.isError, editTodo.isLoading, router]);
-  console.log(editTodo, "...id");
   return (
     <Box
       component="main"
