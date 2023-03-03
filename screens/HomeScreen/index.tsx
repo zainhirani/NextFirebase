@@ -37,7 +37,28 @@ const HomeScreen: React.FC = () => {
   };
   return (
     <>
-      <ButtonWrapper onClick={handleLogout}>Logout</ButtonWrapper>
+      <BoxWrapper>
+        <Typography>
+          <FormattedMessage {...messages.title} />
+        </Typography>
+        <BoxWrapper
+          sx={{
+            boxShadow: "none",
+            margin: 0,
+            padding: 0,
+          }}
+        >
+          <ThemeSwitcher />
+          <ButtonWrapper
+            onClick={() => {
+              router.replace("/app/dashboard");
+            }}
+          >
+            <FormattedMessage {...messages.dashboard} />
+          </ButtonWrapper>
+          <ButtonWrapper onClick={handleLogout}>Logout</ButtonWrapper>
+        </BoxWrapper>
+      </BoxWrapper>
       <Typography sx={{ ml: 4 }}>
         <FormattedMessage {...messages.description} />
       </Typography>

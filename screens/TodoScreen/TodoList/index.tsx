@@ -12,12 +12,16 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { key } from "localforage";
+import { BoxWrapper } from "../Styled";
+import ThemeSwitcher from "components/ThemeSwitch";
+import { useAuth } from "contexts/AuthContext";
 
 const TodoListScreen = () => {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const getTodo: any = useFetchTodo();
   const deleteTodo = useRemoveTodo();
+  const { logOut } = useAuth();
 
   const transformData = getTodo.data?.map((item: any) => {
     return {
@@ -42,6 +46,16 @@ const TodoListScreen = () => {
       });
     }
   }, [deleteTodo.isSuccess, deleteTodo.isError]);
+  const handleLogout = () => {
+    logOut()
+      .then(() => {
+        router.push("/login");
+        sessionStorage.clear();
+      })
+      .catch((error: any) => {
+        console.log(error.message);
+      });
+  };
   const columns: GridColDef[] = [
     {
       field: "id",
@@ -100,13 +114,28 @@ const TodoListScreen = () => {
   return (
     <>
       <Grid>
-        <ButtonWrapper
-          onClick={() => {
-            router.replace("/app/todo/add");
-          }}
-        >
-          <FormattedMessage {...messages.addTodo} />
-        </ButtonWrapper>
+        <BoxWrapper>
+          <Typography>
+            <FormattedMessage {...messages.title} />
+          </Typography>
+          <BoxWrapper
+            sx={{
+              boxShadow: "none",
+              margin: 0,
+              padding: 0,
+            }}
+          >
+            <ThemeSwitcher />
+            <ButtonWrapper
+              onClick={() => {
+                router.replace("/app/todo/add");
+              }}
+            >
+              <FormattedMessage {...messages.addTodo} />
+            </ButtonWrapper>
+            <ButtonWrapper onClick={handleLogout}>Logout</ButtonWrapper>
+          </BoxWrapper>
+        </BoxWrapper>
         <DataGrid
           sx={{ margin: "40px" }}
           autoHeight

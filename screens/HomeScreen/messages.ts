@@ -17,5 +17,9 @@ export default defineMessages({
     id: `${scope}.description`,
     defaultMessage: "This is the basic starter project for react",
   },
+  dashboard: {
+    id: `${scope}.dashboard`,
+    defaultMessage: "Dashboard Page",
+  },
  
 });
