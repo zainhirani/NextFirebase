@@ -45,7 +45,7 @@ const AddTodo = () => {
     onSubmit: (values, { resetForm }) => {
       addTodo.mutate({
         title: values.title,
-        description: values.title,
+        description: values.description,
       });
       resetForm();
     },

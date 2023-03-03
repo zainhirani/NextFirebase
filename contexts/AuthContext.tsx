@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
@@ -26,13 +32,20 @@ export const AuthContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const router = useRouter();
+  const ref = useRef<string | null>(null);
+
+  router.events?.on("routeChangeStart", () => {
+    ref.current = router.asPath;
+  });
+
+  console.log(ref.current, "...ref");
   const [user, setUser] = useState<UserType>({
     email: null,
     uid: null,
   });
 
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
   const params: { pathname: string; query?: { redirectTo: string } } = {
     pathname:
       // @ts-ignore
@@ -40,6 +53,8 @@ export const AuthContextProvider = ({
   };
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log(user, "...user");
+
       const curr = auth.currentUser;
       if (user) {
         setUser({
@@ -56,13 +71,13 @@ export const AuthContextProvider = ({
       } else if (!user && router.pathname == "/") {
         setUser({ email: null, uid: null });
         router.replace(AUTHENTICATION_PATH[0]!);
-      } else if (user && router.pathname == "/register") {
-        router.replace(params);
+      } else if (user && ref.current == "/register") {
+        router.replace(AUTHENTICATION_PATH[0]!);
       }
     });
     setLoading(false);
     return () => unsubscribe();
-  }, []);
+  }, [auth]);
   const signUp = (email: string, password: string) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };

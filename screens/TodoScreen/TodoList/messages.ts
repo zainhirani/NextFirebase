@@ -15,7 +15,7 @@ export default defineMessages({
   },
   title: {
     id: `${scope}.title`,
-    defaultMessage: "Task Title",
+    defaultMessage: "Tasks",
   },
   action: {
     id: `${scope}.action`,
